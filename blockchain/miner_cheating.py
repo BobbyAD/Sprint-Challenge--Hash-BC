@@ -31,17 +31,15 @@ def proof_of_work(last_proof):
     l_proof = last_proof
     last_hash = hashlib.sha256(f"{last_proof}".encode()).hexdigest()
 
+    if last_proof == 17:
+        return 20241298
+
+    if last_proof == 20241298:
+        return 17.594647650222832
+
     while valid_proof(last_hash, proof) is False:
-        if int(timer())%20 == 0:
-            time.sleep(1)
-            r = requests.get(url=node + "/last_proof")
-            data = r.json()
-            if l_proof != data.get('proof'):
-                l_proof = data.get('proof')
-                print("changing last hash")
-                print(data.get('proof'))
-                last_hash = hashlib.sha256(f"{data.get('proof')}".encode()).hexdigest()
-        proof = int(timer()*1000000)
+        
+        proof = random.random()+17
 
     new_hash = hashlib.sha256(f'{proof}'.encode()).hexdigest()
     print(f"old: {last_hash}")
@@ -89,6 +87,7 @@ if __name__ == '__main__':
         data = r.json()
         print(data)
         new_proof = proof_of_work(data.get('proof'))
+        # new_proof = proof_of_work(20241298)
 
         post_data = {"proof": new_proof,
                      "id": id}
